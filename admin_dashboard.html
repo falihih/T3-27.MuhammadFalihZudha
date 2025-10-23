@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Server Admin - Jaringan</title>
+    <style>
+        /* Warna Utama Berdasarkan Logo */
+        :root {
+            --color-primary: #ff8c00; /* Orange Stabilo/Logo */
+            --color-secondary: #e0e0e0; /* Abu-abu terang */
+            --color-text: #333333;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4; /* Background abu-abu muda */
+            text-align: center;
+            padding: 20px;
+        }
+        .dashboard {
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            max-width: 1000px;
+            margin: 20px auto;
+            text-align: left;
+        }
+        /* Gaya Logo */
+        .header-logo-area {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header-logo-area img {
+            width: 60px;
+            height: 60px;
+            margin-right: 15px;
+            vertical-align: middle;
+        }
+        h1 {
+            color: var(--color-text);
+            display: inline-block;
+            vertical-align: middle;
+            margin: 0;
+            border-bottom: 2px solid var(--color-primary);
+            padding-bottom: 5px;
+        }
+        h2 {
+            color: var(--color-primary);
+            margin-top: 25px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+        }
+        /* Navigasi Utama */
+        .main-nav {
+            margin-bottom: 20px;
+            border-bottom: 3px solid #ddd;
+            padding-bottom: 10px;
+            text-align: center; /* Pusatkan navigasi */
+        }
+        .nav-button {
+            padding: 10px 15px;
+            background-color: #ddd;
+            color: var(--color-text);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 0 5px;
+            transition: background-color 0.3s;
+        }
+        .nav-button.active {
+            background-color: var(--color-primary);
+            color: white;
+        }
+        .section-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr; 
+            gap: 20px;
+            margin-top: 20px;
+        }
+        /* Konten Dinamis */
+        .tab-content {
+            padding: 15px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            background-color: #fff;
+            margin-top: 15px;
+        }
+        .tab-content h3 {
+            color: var(--color-primary);
+        }
+        .content-menu {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .menu-item {
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid var(--color-secondary);
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .menu-item:hover {
+            background-color: #fff3e0; /* Oranye muda */
+            border-color: var(--color-primary);
+        }
+
+        /* Gaya Profil & Peserta */
+        .profile-card, .contact-card {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            margin-bottom: 15px;
+        }
+        .profile-picture {
+            width: 80px;
+            height: 80px;
+            background-color: var(--color-secondary);
+            border-radius: 50%;
+            margin: 0 auto 10px;
+            display: block;
+            line-height: 80px;
+            text-align: center;
+            color: #555;
+            font-size: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 3px solid var(--color-primary); 
+        }
+        .action-button.add {
+            background-color: var(--color-primary);
+        }
+        .logout-button {
+            padding: 10px 20px;
+            background-color: var(--color-primary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 20px;
+            display: inline-block;
+        }
+        .logout-button:hover {
+            background-color: #cc7000;
+        }
+        #file-input-foto {
+            display: none;
+        }
+
+        /* Gaya Input yang bisa diedit */
+        .profile-info input, .contact-card input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            /* Hapus background-color: #eee; untuk input yang dapat diedit */
+            box-sizing: border-box;
+            color: #333; /* Warna teks gelap */
+        }
+        /* Tambahkan efek visual saat input fokus */
+        .profile-info input:focus {
+            border-color: var(--color-primary);
+            box-shadow: 0 0 5px rgba(255, 140, 0, 0.4);
+            outline: none;
+        }
+
+        .action-button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white;
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
+            width: 100%;
+            text-align: center;
+            text-decoration: none;
+        }
+        .action-button.chat {
+            background-color: #25d366; /* WhatsApp Green */
+        }
+        .action-button.drive {
+            background-color: #4285f4; /* Google Blue */
+        }
+        .action-button.save {
+            background-color: #4CAF50; /* Hijau Save */
+            margin-bottom: 15px;
+        }
+
+        #list-peserta {
+            list-style: none;
+            padding: 0;
+        }
+        .peserta-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px dotted #ccc;
+        }
+        .peserta-item:last-child {
+            border-bottom: none;
+        }
+        .peserta-item .action-button.delete {
+            background-color: #f44336;
+            width: auto;
+            display: inline-block;
+            padding: 5px 10px;
+        }
+        .input-add-peserta {
+            display: flex;
+            gap: 10px;
+        }
+        .input-add-peserta input {
+            flex-grow: 1;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .input-add-peserta .action-button.add {
+            width: auto;
+        }
+    </style>
+    
+    <script>
+        // --- DATA KONSTAN ---
+        const ADMIN_PHONE = "085141234292"; 
+        const ADMIN_EMAIL = "muhammadfalihzudhha@gmail.com"; 
+        // Default ini hanya akan dipakai jika localStorage kosong
+        const DEFAULT_SEKOLAH = "SMK ASTAMITRA PURWODADI";
+        const DEFAULT_NISN = "[NISN: Wajib Diisi]";
+        const DEFAULT_NIS = "[NIS: Wajib Diisi]";
+        const DEFAULT_PESERTA = [
+            "Muhammad Falih Zudha (Admin)",
+            "Siswa 1",
+            "Siswa 2"
+        ];
+        
+        // --- VARIABEL GLOBAL DAN PERSISTENSI (LOCAL STORAGE) ---
+        let daftarPeserta = [];
+        let fotoProfilData = '';
+        let loggedInUserRole = localStorage.getItem('loggedInUserRole') || 'Siswa'; 
+        let loggedInMapel = localStorage.getItem('loggedInMapel') || ''; 
+        let loggedInUsername = localStorage.getItem('loggedInUsername') || 'Pengguna'; 
+        
+        // 🚨 KEAMANAN: Memeriksa apakah pengguna sudah login
+        if (!localStorage.getItem('loggedInUserRole')) {
+             window.location.href = "loginb.html"; 
+        }
+
+        // --- FUNGSI PROFIL DINAMIS (NISN, NIS, SEKOLAH) ---
+        function loadData() {
+            const storedPeserta = localStorage.getItem('daftarPeserta');
+            daftarPeserta = storedPeserta ? JSON.parse(storedPeserta) : [...DEFAULT_PESERTA];
+            fotoProfilData = localStorage.getItem('fotoProfilData');
+
+            // 🆕 Memuat data Profil (NISN, NIS, Sekolah) berdasarkan username
+            const profileKey = `profileData_${loggedInUsername}`;
+            const storedProfile = localStorage.getItem(profileKey);
+            
+            if (storedProfile) {
+                const profile = JSON.parse(storedProfile);
+                document.getElementById('nisn-input').value = profile.nisn || DEFAULT_NISN;
+                document.getElementById('nis-input').value = profile.nis || DEFAULT_NIS;
+                document.getElementById('sekolah-input').value = profile.sekolah || DEFAULT_SEKOLAH;
+            } else {
+                // Set default jika belum pernah disimpan
+                document.getElementById('nisn-input').value = DEFAULT_NISN;
+                document.getElementById('nis-input').value = DEFAULT_NIS;
+                document.getElementById('sekolah-input').value = DEFAULT_SEKOLAH;
+            }
+        }
+        
+        function saveProfileData() {
+            const profileKey = `profileData_${loggedInUsername}`;
+            
+            // 🆕 Mengambil nilai input yang baru
+            const newNisn = document.getElementById('nisn-input').value.trim();
+            const newNis = document.getElementById('nis-input').value.trim();
+            const newSekolah = document.getElementById('sekolah-input').value.trim();
+            
+            // Validasi: Pastikan field tidak kosong sebelum disimpan
+            if (!newNisn || !newNis || !newSekolah) {
+                alert("⚠️ Semua kolom NISN, NIS, dan Sekolah harus diisi sebelum menyimpan!");
+                // Agar data lama tidak terhapus, kita tidak melanjutkan penyimpanan
+                // dan memuat ulang data lama
+                loadData(); 
+                return;
+            }
+
+            // 🆕 Membuat objek profil baru
+            const newProfile = {
+                nisn: newNisn,
+                nis: newNis,
+                sekolah: newSekolah
+            };
+            
+            // Menyimpan objek profil ke localStorage dengan key unik per user
+            localStorage.setItem(profileKey, JSON.stringify(newProfile));
+            
+            // Simpan data lain (foto, peserta)
+            localStorage.setItem('daftarPeserta', JSON.stringify(daftarPeserta));
+            localStorage.setItem('fotoProfilData', fotoProfilData);
+
+            alert("✅ Data Profil (NISN, NIS, Sekolah) berhasil diperbarui dan disimpan!");
+        }
+
+
+        // --- FUNGSI NAVIGASI & PESERTA ---
+        function changeTab(role) {
+            document.querySelectorAll('.nav-button').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`nav-${role.toLowerCase()}`).classList.add('active');
+            
+            document.getElementById('content-guru').style.display = (role === 'Guru') ? 'block' : 'none';
+            document.getElementById('content-siswa').style.display = (role === 'Siswa') ? 'block' : 'none';
+        }
+
+        function renderPeserta() {
+            const list = document.getElementById('list-peserta');
+            if (!list) return;
+
+            list.innerHTML = ''; 
+            daftarPeserta.forEach((peserta, index) => {
+                const li = document.createElement('li');
+                li.className = 'peserta-item';
+                const nama = document.createTextNode(peserta);
+                li.appendChild(nama);
+                const deleteButton = document.createElement('button');
+                deleteButton.className = 'action-button delete';
+                deleteButton.textContent = '❌ Hapus';
+                deleteButton.onclick = function() {
+                    hapusPeserta(index);
+                };
+                li.appendChild(deleteButton);
+                list.appendChild(li);
+            });
+            // Karena ini dipanggil dari loadData, kita tidak perlu saveData di sini, kecuali setelah CRUD
+        }
+
+        function displayFotoProfil() {
+            const picContainer = document.getElementById('profile-pic');
+            if (fotoProfilData) {
+                picContainer.innerHTML = `<img src="${fotoProfilData}" alt="Foto Profil Admin" style="width: 100%; height: 100%; object-fit: cover;">`;
+            } else {
+                picContainer.innerHTML = "Klik Ganti";
+            }
+        }
+        
+        function gantiFotoAksi() { document.getElementById('file-input-foto').click(); }
+        function handleFileChange(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    fotoProfilData = e.target.result; 
+                    displayFotoProfil();
+                    saveProfileData(); // Panggil saveProfileData untuk menyimpan foto dan data lainnya
+                    alert("Foto Profil berhasil diganti dan disimpan!");
+                };
+                reader.readAsDataURL(file); 
+            }
+        }
+
+        function tambahPeserta() {
+            const inputElement = document.getElementById('input-nama-peserta');
+            const namaBaru = inputElement.value;
+            if (namaBaru && namaBaru.trim() !== "") {
+                daftarPeserta.push(namaBaru.trim());
+                renderPeserta(); 
+                inputElement.value = ''; 
+                saveProfileData(); // Simpan perubahan daftar peserta
+                alert(`Peserta "${namaBaru}" berhasil ditambahkan dan disimpan!`);
+            } else {
+                alert("Nama peserta tidak boleh kosong.");
+            }
+        }
+        function hapusPeserta(index) {
+            const namaDihapus = daftarPeserta[index];
+            if (confirm(`Apakah Anda yakin ingin menghapus peserta "${namaDihapus}"?`)) {
+                daftarPeserta.splice(index, 1); 
+                renderPeserta(); 
+                saveProfileData(); // Simpan perubahan daftar peserta
+                alert(`Peserta "${namaDihapus}" berhasil dihapus dan disimpan!`);
+            }
+        }
+        function chatAdmin() {
+            window.open(`https://wa.me/${ADMIN_PHONE.replace(/\D/g,'')}`, '_blank');
+        }
+        
+        function handleLogout() {
+            localStorage.removeItem('loggedInUserRole'); 
+            localStorage.removeItem('loggedInMapel');
+            localStorage.removeItem('loggedInUsername'); 
+            window.location.href = "loginb.html";
+        }
+
+
+        // INISIALISASI DASHBOARD
+        function initializeDashboard() {
+            loadData(); // Memuat data NISN, NIS, Sekolah, Peserta, Foto
+            
+            let welcomeMessage = '';
+            
+            if (loggedInUserRole === 'Admin') {
+                // PESAN ADMIN BARU & PROFESIONAL
+                document.getElementById('welcome-title').textContent = 'Dashboard Administrasi Jaringan';
+                welcomeMessage = `Selamat datang, **${loggedInUsername}**. Anda telah berhasil masuk ke menu **Dashboard Admin Mapel Jaringan**. Harap kelola data dengan cermat.`;
+            } else {
+                // PESAN SISWA BARU
+                 document.getElementById('welcome-title').textContent = 'Selamat datang di Dasboardmu';
+                 welcomeMessage = `Selamat datang, **${loggedInUsername}** dari SMK ASTAMITRA PURWODADI. Anda login sebagai Siswa untuk Mata Pelajaran **${loggedInMapel.toUpperCase()}**. Data Anda tersimpan di browser.`;
+            }
+            
+            document.getElementById('welcome-message').innerHTML = welcomeMessage;
+            
+            // Isi Kontak Admin (Tetap ReadOnly)
+            document.getElementById('telepon-admin-input').value = ADMIN_PHONE;
+            document.getElementById('email-admin-input').value = ADMIN_EMAIL;
+            
+            displayFotoProfil();
+            renderPeserta();
+            
+            const initialTab = (loggedInUserRole === 'Admin') ? 'Guru' : 'Siswa';
+            changeTab(initialTab); 
+            
+            // Sembunyikan/Tampilkan fitur Admin (Kelola Peserta)
+            const pesertaCard = document.getElementById('kelola-peserta-card');
+            if (loggedInUserRole === 'Siswa' && pesertaCard) {
+                pesertaCard.style.display = 'none';
+            }
+            
+            // Tampilkan Mapel Pilihan Siswa di Tab Siswa
+            if (loggedInUserRole === 'Siswa' && loggedInMapel) {
+                 document.getElementById('display-mapel-pilihan').textContent = loggedInMapel;
+            }
+        }
+
+        window.onload = initializeDashboard;
+    </script>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="header-logo-area">
+            <img src="Logo_smk_astamitra.PNG" alt="Logo SMK Astamitra"> 
+            <h1 id="welcome-title">Dashboard Server Admin Jaringan 🔒</h1>
+        </div>
+        
+        <p id="welcome-message"></p>
+        
+        <div class="main-nav">
+            <button class="nav-button" id="nav-guru" onclick="changeTab('Guru')">Menu Guru</button>
+            <button class="nav-button" id="nav-siswa" onclick="changeTab('Siswa')">Menu Siswa</button>
+        </div>
+        
+        <div class="section-grid">
+            
+            <div>
+                <h2>Profil & Identitas</h2>
+                
+                <div class="profile-card">
+                    <h3>Foto & Data Pribadi (Dapat Diubah)</h3>
+                    
+                    <input type="file" id="file-input-foto" accept="image/*" onchange="handleFileChange(event)">
+                    
+                    <div class="profile-picture" id="profile-pic" onclick="gantiFotoAksi()">
+                        Klik Ganti
+                    </div>
+                    
+                    <button class="action-button" onclick="gantiFotoAksi()" style="background-color: var(--color-primary); margin-bottom: 15px;">Pilih Foto dari Galeri</button>
+
+                    <div class="profile-info">
+                        <label for="nisn-input">NISN:</label>
+                        <input type="text" id="nisn-input">
+                        
+                        <label for="nis-input">NIS:</label>
+                        <input type="text" id="nis-input">
+
+                        <label for="sekolah-input">Sekolah:</label>
+                        <input type="text" id="sekolah-input">
+
+                        <button class="action-button save" onclick="saveProfileData()">💾 Simpan Data Profil</button>
+                    </div>
+                </div>
+
+                <div class="contact-card">
+                    <h3>Kontak Admin (Tidak Dapat Diubah)</h3>
+                    <label>Telepon Admin:</label>
+                    <input type="text" id="telepon-admin-input" readonly>
+                    
+                    <label>Email Admin:</label>
+                    <input type="text" id="email-admin-input" readonly>
+                    
+                    <button class="action-button chat" onclick="chatAdmin()">💬 Hubungi Admin via WA</button>
+                </div>
+
+            </div>
+            
+            <div>
+                
+                <div id="content-guru" class="tab-content">
+                    <h2>Menu Administrasi Guru (Admin)</h2>
+                    
+                    <div class="profile-card" style="background-color: #e8f5e9;">
+                        <h3>Kelola Mapel Jaringan (Utama)</h3>
+                        <p style="font-size: 1.2em; font-weight: bold; color: #388e3c;">Guru Pembimbing: Eko Prasetyo Nugraha</p>
+                        
+                        <div class="profile-card" id="kelola-peserta-card" style="background-color: white;">
+                            <h4>Kelola Peserta Mapel Jaringan</h4>
+                            <div class="input-add-peserta">
+                                <input type="text" id="input-nama-peserta" placeholder="Masukkan Nama Peserta Baru">
+                                <button class="action-button add" onclick="tambahPeserta()">➕ Tambah</button>
+                            </div>
+                            <hr style="margin: 15px 0;">
+                            <ul id="list-peserta">
+                                </ul>
+                        </div>
+                    </div>
+
+                    <div class="profile-card">
+                        <h3>Pilihan Kelas Jurusan (Akses Admin Guru)</h3>
+                        <div class="content-menu">
+                            <div class="menu-item" onclick="alert('Akses Kelas MAPIL')">Kelas MAPIL</div>
+                            <div class="menu-item" onclick="alert('Akses Kelas TKJ')">Kelas TKJ</div>
+                            <div class="menu-item" onclick="alert('Akses Kelas FARMASI')">Kelas FARMASI</div>
+                            <div class="menu-item" onclick="alert('Akses Kelas LK')">Kelas LK</div>
+                        </div>
+                    </div>
+                    
+                </div>
+                
+                <div id="content-siswa" class="tab-content" style="display: none;">
+                    <h2>Menu Akses Siswa</h2>
+
+                    <div class="profile-card">
+                        <h3>Pilih Mata Pelajaran Anda</h3>
+                        <p>Pilihan Mata Pelajaran Anda (**<span style="color: var(--color-primary);" id="display-mapel-pilihan">Mapel Pilihan</span>**) telah disimpan saat login. Silakan gunakan menu di bawah.</p>
+                        <div class="content-menu">
+                            <div class="menu-item" onclick="alert('Akses Mapel Jaringan')">Mapel Jaringan</div>
+                            <div class="menu-item" onclick="alert('Akses Mapel Desain')">Mapel Desain</div>
+                            <div class="menu-item" onclick="alert('Akses Mapel Komputer')">Mapel Komputer</div>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-card">
+                        <h3>Pilihan Kelas (Simulasi)</h3>
+                        <p>Akses ke kelas Anda sesuai Jurusan Anda:</p>
+                        <div class="content-menu">
+                            <div class="menu-item" onclick="alert('Akses Kelas X')">Kelas X</div>
+                            <div class="menu-item" onclick="alert('Akses Kelas XI')">Kelas XI</div>
+                            <div class="menu-item" onclick="alert('Akses Kelas XII')">Kelas XII</div>
+                        </div>
+                    </div>
+
+                    <div class="profile-card" style="background-color: #fbe9e7;">
+                        <h3>Upload Tugas</h3>
+                        <p>Akses folder Google Drive untuk mengunggah tugas yang sudah selesai:</p>
+                        <a href="https://drive.google.com/drive/folders/1u7bBbkQkZEGyLM_LyUStHkrFIqKptyqm" target="_blank" class="action-button drive">
+                            📁 Buka Google Drive Tugas
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <hr style="margin-top: 30px;">
+        <button onclick="handleLogout()" class="logout-button">LOGOUT</button>
+    </div>
+</body>
+</html>
